@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 from sklearn import preprocessing
 from sklearn import svm
+from sklearn.semi_supervised import label_propagation
 
 data = pd.read_feather('./feature_stage_data.ftr')
 X = data[data.columns[3:]]
@@ -18,7 +19,8 @@ clf = svm.SVC()
 clf.fit(X, y)
 clf.score(X, y)
 yp = clf.predict(X)
-accuracy_score(y, yp)
+
+accuracy_score(y, [3 for i in range(len(y))])
 
 
 
@@ -53,6 +55,7 @@ for i in yp:
         print(i)
 
 accuracy_score(y, yp)
+accuracy_score(y, [3 for i in range(len(y))])
 
 
 
