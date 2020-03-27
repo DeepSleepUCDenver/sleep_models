@@ -15,7 +15,7 @@ emg = data[['emg']]
 window_size - The number of elements to average. This is a non-overlapping window. 
 data - data straight from a feather file. 
 
-The following are the 3 channels (in the order they are stacked, with the first element listed is the top.:
+The following are the 3 channels (in the order they are stacked, with the first element listed is on the top.:
 eeg, eog, emg
 '''
 def down_sample(window_size, data):
