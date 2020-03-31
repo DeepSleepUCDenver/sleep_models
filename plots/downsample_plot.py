@@ -2,7 +2,7 @@
 import pandas as pd
 import seaborn as sea
 import matplotlib.pyplot as plt
-import average_downsampling_sliding_window
+import ../average_downsampling_sliding_window
 
 data = pd.read_feather("Staging_Data_GT_190315.ftr")
 
