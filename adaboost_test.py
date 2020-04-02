@@ -25,6 +25,9 @@ y_obs = y[nnl(y)]
 
 # apply LabelSpreading
 x_nuls = x[nul(y)]
+# keep = np.load('sfs_features.npy')
+# x_obs = x_obs[:,keep]
+# x_nuls= x_nuls[:,keep]
 label_spread = LabelSpreading(kernel='knn', alpha=0.8)
 label_spread.fit(x_obs, y_obs)
 x_all = np.concatenate([x_obs, x_nuls], axis=0)
@@ -39,7 +42,7 @@ def test_adi_trees(x, y):
         x_btr = np.concatenate([x_btr, x[y == i][:smpnum]])
         y_btr = np.concatenate([y_btr, y[y == i][:smpnum]])
     x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20)
-    mod = AdaBoostClassifier(n_estimators=100, random_state=0)
+    mod = AdaBoostClassifier(n_estimators=200, random_state=0)
     mod.fit(x_tr, y_tr)
     print(mod.score(x_te, y_te))
 
@@ -52,15 +55,15 @@ def test_adi_svm(x, y):
         x_btr = np.concatenate([x_btr, x[y == i][:smpnum]])
         y_btr = np.concatenate([y_btr, y[y == i][:smpnum]])
     x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20)
-    mod = AdaBoostClassifier(base_estimator=SVC(probability=True, kernel='linear'), n_estimators=100, random_state=0)
+    mod = AdaBoostClassifier(base_estimator=SVC(probability=True, kernel='rbf'), n_estimators=100, random_state=0)
     mod.fit(x_tr, y_tr)
     print(mod.score(x_te, y_te))
 
 test_adi_trees(x_obs, y_obs)
 test_adi_trees(x_all, y_all)
 # this sucks trust me
-test_adi_svm(x_obs, y_obs)
-test_adi_svm(x_all, y_all)
+#test_adi_svm(x_obs, y_obs)
+#test_adi_svm(x_all, y_all)
 
 
 
