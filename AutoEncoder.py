@@ -16,14 +16,14 @@ import matplotlib
 
 
 
-data = pd.read_feather("Staging_Data_GT_190315.ftr")
-
-
-eeg = data[['eeg']].to_numpy().transpose()
-eog = data[['eog']].to_numpy().transpose()
-emg = data[['emg']].to_numpy().transpose()
-
-data = np.vstack((eeg,eog,emg))
+#data = pd.read_feather("Staging_Data_GT_190315.ftr")
+#
+#
+#eeg = data[['eeg']].to_numpy().transpose()
+#eog = data[['eog']].to_numpy().transpose()
+#emg = data[['emg']].to_numpy().transpose()
+#
+#data = np.vstack((eeg,eog,emg))
 data = np.load('reshap_to_npy/all_labeled_data_X.npy')
 
 window_length = data.shape[1]
@@ -34,10 +34,10 @@ window_length = data.shape[1]
 #Encoder
 input_window = Input(shape=(window_length,3))
 x = Conv1D(16, 3, activation="relu", padding="same")(input_window) # Full Dimension
-#x = BatchNormalization()(x)
-x = MaxPooling1D(2, padding="same")(x)
+x = BatchNormalization()(x)
+x = MaxPooling1D(3, padding="same")(x)
 x = Conv1D(1, 3, activation="relu", padding="same")(x)
-#x = BatchNormalization()(x)
+x = BatchNormalization()(x)
 encoded = MaxPooling1D(2, padding="same")(x) # 3 dims... I'm not super convinced this is actually 3 dimensions
 
 encoder = Model(input_window, encoded)
@@ -45,12 +45,12 @@ encoder = Model(input_window, encoded)
 # 3 dimensions in the encoded layer
 
 x = Conv1D(1, 3, activation="relu", padding="same")(encoded) # Latent space
-#x = BatchNormalization()(x)
+x = BatchNormalization()(x)
 x = UpSampling1D(2)(x) # 6 dims
-x = Conv1D(16, 2, activation='relu')(x) # 5 dims
-#x = BatchNormalization()(x)
-x = UpSampling1D(2)(x) # 10 dims
-decoded = Conv1D(1, 3, activation='sigmoid', padding='same')(x) # 10 dims
+x = Conv1D(16, 3, activation='relu', padding='same')(x) # 5 dims
+x = BatchNormalization()(x)
+x = UpSampling1D(3)(x) # 10 dims
+decoded = Conv1D(3, 3, activation='sigmoid', padding='same')(x) # 10 dims
 autoencoder = Model(input_window, decoded)
 autoencoder.summary()
 
