@@ -14,7 +14,7 @@ from mlxtend.plotting import plot_sequential_feature_selection as plot_sfs
 import matplotlib.pyplot as plt
 from sklearn.metrics import plot_confusion_matrix
 
-n_features = 10
+n_features = 15
 
 # Read am partition the matrix
 def load_data():
@@ -36,7 +36,7 @@ x_obs, y_obs, x_nuls = load_data()
 
 def do_sfs(x_tr, y_tr):
     sfs_kern = sfs(svm.SVC(kernel='rbf'),
-               k_features=21,
+               k_features=n_features,
                forward=True,
                floating=True,
                verbose=2,
@@ -55,7 +55,7 @@ for i in range(2,6):
     x_btr = np.concatenate([x_btr, x[y == i][:smpnum]])
     y_btr = np.concatenate([y_btr, y[y == i][:smpnum]])
 
-x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20)
+x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20, )
 
 best = do_sfs(x_tr, y_tr)
 
@@ -99,10 +99,9 @@ mod.fit(x_tr, y_tr)
 mod.score(x_te, y_te)
 
 disp = plot_confusion_matrix(mod, x_te, y_te,
-                             cmap=plt.cm.Blues)
+                             cmap=plt.cm.Blues
+                             ,normalize='true')
 disp.ax_.set_title("RBF Kernel with " + str(n_features) + " best features")
-
-
 cfm = disp.plot()
-cfm.savefig("SFS-" + str(n_features) + ".png")
+cfm.figure_.savefig("CM-SVM-RBF-" + str(n_features) + ".png")
 

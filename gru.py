@@ -96,6 +96,7 @@ c_out_layer = Activation('sigmoid')(fe)
 # define and compile supervised discriminator model
 c_model = Model(start, c_out_layer)
 c_model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+c_model.compile(loss='sparce_binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 c_model.summary()
 
 

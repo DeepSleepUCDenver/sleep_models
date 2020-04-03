@@ -24,6 +24,7 @@ eog = data[['eog']].to_numpy().transpose()
 emg = data[['emg']].to_numpy().transpose()
 
 data = np.vstack((eeg,eog,emg))
+data = np.load('reshap_to_npy/all_labeled_data_X.npy')
 
 window_length = data.shape[1]
 
@@ -65,6 +66,7 @@ history = autoencoder.fit(x_train, x_train,
                 batch_size=1024,
                 shuffle=True,
                 validation_data=(x_train, x_train))
+
 
 #decoded_stocks = autoencoder.predict(x_test)
 

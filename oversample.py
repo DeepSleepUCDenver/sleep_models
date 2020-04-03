@@ -20,6 +20,8 @@ def load_all_data():
     y = y.values
     x_va = x[[i in [8, 9] for i in o.values]]
     y_va = y[[i in [8, 9] for i in o.values]]
+    x = x[[i not in [8, 9] for i in o.values]]
+    y = y[[i not in [8, 9] for i in o.values]]
     o.unique()
     
     
@@ -43,4 +45,3 @@ def load_all_data():
     return x_tr, y_tr, x_te, y_te, x_va, y_va
 
 
-load_all_data()
