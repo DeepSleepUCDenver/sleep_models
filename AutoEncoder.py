@@ -1,17 +1,17 @@
 import pandas as pd
 import numpy as np
-import keras
-from keras.layers import Input, Dense, Conv1D, MaxPooling1D, UpSampling1D, BatchNormalization, LSTM, RepeatVector
-from keras.models import Model
-from keras.models import model_from_json
-from keras import regularizers
-import matplotlib.pyplot as plt
+#import keras
+from tensorflow.keras.layers import Input, Dense, Conv1D, MaxPooling1D, UpSampling1D, BatchNormalization, LSTM, RepeatVector
+from tensorflow.keras.models import Model
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras import regularizers
 from sklearn.metrics import accuracy_score
 from sklearn import preprocessing
 from sklearn import svm
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
-import matplotlib
+from tensorflow.python.client import device_lib
+print(device_lib.list_local_devices())
 
 
 
