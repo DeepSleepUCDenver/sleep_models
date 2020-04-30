@@ -67,6 +67,13 @@ bay.fit(x_tr, y_tr)
 bay.score(x_te, y_te)
 bay.score(x_va, y_va)
 
+from sklearn.ensemble import RandomForestClassifier
+
+rdf = RandomForestClassifier(max_depth=4, random_state=0)
+rdf.fit(x_tr, y_tr)
+rdf.score(x_te, y_te)
+rdf.score(x_va, y_va)
+
 
 # example of semi-supervised gan for mnist
 from numpy import expand_dims
