@@ -26,26 +26,13 @@ for i in range(3):
     sdev = np.std(data[:,:,i])
     data[:,:,i] = (data[:,:,i] - mean) / sdev
 
-# # minmax, data
-# data = np.load('./reshap_to_npy/all_labeled_data_X.npy')
-# for i in range(3):
-#     print(i)
-#     minx = np.min(data[:,:,i])
-#     maxx = np.max(data[:,:,i])
-#     data[:,:,i] = (data[:,:,i] - minx) / (maxx - minx)
-# 
-# OH this was bad!
+#data_slice = data[0:1][:][:]
 
-data_slice = data[0:1][:][:]
+data = data.reshape(data.shape[0]*500, data.shape[1]//500, data.shape[2])
 print(data.shape)
-print(data_slice.shape)
-
-
+#print(data_slice.shape)
 
 window_length = data.shape[1]
-
-
-#TODO: Normalize Data
 
 #Encoder
 input_window = Input(shape=(window_length,3))
@@ -69,6 +56,8 @@ x = UpSampling1D(3)(x) # 10 dims
 decoded = Conv1D(3, 3, activation='sigmoid', padding='same')(x) # 10 dims
 autoencoder = Model(input_window, decoded)
 autoencoder.summary()
+
+
 
 
 x_train = data

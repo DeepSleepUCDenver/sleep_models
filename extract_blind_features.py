@@ -46,6 +46,7 @@ for k, name in enumerate(['emg', 'eog', 'eeg']):
             features[c] = temp[:,i]
         print(temp.shape)
     features = pd.concat([features, features_k], sort=False)
+    features.to_feather("blind_features" + str(i) + ".ftr")
 
 features.to_feather("blind_features.ftr")
 
