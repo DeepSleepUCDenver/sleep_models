@@ -37,11 +37,20 @@ def load_all_data():
     x_all = np.concatenate([x_obs, x_nuls], axis=0)
     y_all = np.concatenate([y_obs, label_spread.predict(x_nuls)], axis=0)
     
-    # Over sample the stages
-    zen = SMOTE(random_state=8675309)
-    x, y = zen.fit_resample(x_all, y_all)
+    # Undersample the stages
     x, y = shuffle(x, y, random_state=42)
-    x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size = 0.20)
+    smpnum = min([sum(y==i) for i in range(1,6)])
+    y_btr = y[y == 1][:smpnum]
+    x_btr = x[y == 1][:smpnum]
+    for i in range(2,6):
+        x_btr = np.concatenate([x_btr, x[y == i][:smpnum]])
+        y_btr = np.concatenate([y_btr, y[y == i][:smpnum]])
+        x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20)
+    # Over sample the stages
+    #zen = SMOTE(random_state=8675309)
+    #x, y = zen.fit_resample(x_all, y_all)
+    #x, y = shuffle(x, y, random_state=42)
+    #x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size = 0.20)
     return x_tr, y_tr, x_te, y_te, x_va, y_va
 
 
@@ -73,10 +82,19 @@ def load_known_data():
     #x_all = np.concatenate([x_obs, x_nuls], axis=0)
     #y_all = np.concatenate([y_obs, label_spread.predict(x_nuls)], axis=0)
     
-    # Over sample the stages
-    zen = SMOTE(random_state=8675309)
-    x, y = zen.fit_resample(x_all, y_all)
+    # Undersample the stages
     x, y = shuffle(x, y, random_state=42)
-    x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size = 0.20)
+    smpnum = min([sum(y==i) for i in range(1,6)])
+    y_btr = y[y == 1][:smpnum]
+    x_btr = x[y == 1][:smpnum]
+    for i in range(2,6):
+        x_btr = np.concatenate([x_btr, x[y == i][:smpnum]])
+        y_btr = np.concatenate([y_btr, y[y == i][:smpnum]])
+        x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20)
+    # Over sample the stages
+    #zen = SMOTE(random_state=8675309)
+    #x, y = zen.fit_resample(x_all, y_all)
+    #x, y = shuffle(x, y, random_state=42)
+    #x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size = 0.20)
     return x_tr, y_tr, x_te, y_te, x_va, y_va
 

@@ -11,7 +11,7 @@ from sklearn.ensemble import AdaBoostClassifier
 #from sklearn.semi_supervised import label_propagation
 from sklearn.semi_supervised import LabelSpreading
 
-data = pd.read_feather('./feature_stage_data_all.ftr')
+data = pd.read_feather('../feature_stage_data_all.ftr')
 x = data[data.columns[3:]]
 y = data['stage']
 x = x.values
