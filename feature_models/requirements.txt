@@ -1,0 +1,10 @@
+scipy==1.4.1
+mlxtend==0.17.2
+numpy==1.18.2
+matplotlib==3.2.1
+pandas==1.0.3
+seaborn==0.10.0
+imbalanced_learn==0.6.2
+mne==0.20.3
+imblearn==0.0
+scikit_learn==0.22.2.post1

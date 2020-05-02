@@ -84,7 +84,7 @@ from imblearn.ensemble import BalancedRandomForestClassifier
 # validation_accuracy.append(rfb.score(x_va, y_va))
 
 model_name.append("Balanced Random Forest")
-label_prop.append("Label Propagation")
+label_prop.append("No Propagation")
 rfb = BalancedRandomForestClassifier(max_depth=2)
 rfb.fit(x_tr, y_tr)
 train_accuracy.append(     rfb.score(x_tr, y_tr))
@@ -95,7 +95,7 @@ validation_accuracy.append(rfb.score(x_va, y_va))
 from imblearn.ensemble import RUSBoostClassifier
 
 model_name.append("RUS Boost")
-label_prop.append("Label Propagation")
+label_prop.append("No Propagation")
 clf = RUSBoostClassifier(random_state=0)
 clf.fit(x_tr, y_tr)
 train_accuracy.append(     clf.score(x_tr, y_tr))
