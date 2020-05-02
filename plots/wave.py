@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 data = pd.read_feather("../flat_data/Staging_Data_GT_190315.ftr")
 
+
 #sea.lineplot(y='eeg', x='index', data=data[:500])
 #plt.show()
 
