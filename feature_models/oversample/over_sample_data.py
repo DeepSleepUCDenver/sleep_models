@@ -157,7 +157,7 @@ def load_iter_psdo_label_data(algo, n_splits):
     
     # Over sample the stages for labeling
     zen = SMOTE(random_state=8675309)
-    x_obs_os, y_obs_os = zen.fit_resample(x_obs, y_obs, n_splits)
+    x_obs_os, y_obs_os = zen.fit_resample(x_obs, y_obs)
 
     # apply Pseudo Label Spreading
     model = Iterative_PseudoLabeler(
@@ -167,7 +167,7 @@ def load_iter_psdo_label_data(algo, n_splits):
         x_nuls,
         n_splits
     )
-    model.fit(x_obs_os, y_obs_os)
+    model.fit()
     x_all = np.concatenate([x_obs, x_nuls], axis=0)
     y_nuls = model.predict(x_nuls)
     y_all = np.concatenate([y_obs, y_nuls], axis=0)
@@ -180,6 +180,16 @@ def load_iter_psdo_label_data(algo, n_splits):
 
     return x_tr, y_tr, x_te, y_te, x_va, y_va
 
+#model = Iterative_PseudoLabeler(
+#    RandomForestClassifier(n_estimators=1),
+#    x_tr,
+#    y_tr,
+#    x_te,
+#    num_split=3
+#)
+#
+#model.fit()
+#print(model.predict(x_te)[0:20])
 
 
 

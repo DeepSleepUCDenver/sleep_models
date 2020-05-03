@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
+import gc
 from mne_features.feature_extraction import extract_features
 from mne_features.univariate import get_univariate_funcs
 # This is my best gess for the right value in this case.
 sfreq = 200
 
+pd.read_feather('./blind_features.ftr')
 
 # Normalize, data
 data = np.load('./reshap_to_npy/all_labeled_data_X.npy')
@@ -15,6 +17,9 @@ for k, name in enumerate(['emg', 'eog', 'eeg']):
     columns_v = []
     works = []
     feature_functions = pd.DataFrame.from_dict(get_univariate_funcs(sfreq), orient='index')
+    #feature_functions = feature_functions.iloc[21:]
+    feature_functions = feature_functions[feature_functions.index != 'svd_entropy']
+    feature_functions = feature_functions[feature_functions.index != 'svd_fisher_info']
     # A first pass to collect data on data
     for i, fefu in feature_functions.iterrows():
         try:
@@ -32,23 +37,26 @@ for k, name in enumerate(['emg', 'eog', 'eeg']):
         except ValueError:
             print(i + "will not work for this data")
             works.append(False)
-    
     feature_functions = feature_functions[works]
     feature_functions['columns'] = columns_v
     lenth = data.shape[0]
-    lenth = 10#data.shape[0]
-    features_k = pd.DataFrame(columns=columns)
+    gc.collect()
+    # lenth = 10#data.shape[0]
+    #features_k = pd.DataFrame(columns=columns)
     for i, fefu in feature_functions.iterrows():
         temp = fefu[0](data[:,:,k])
         temp = temp.reshape([lenth, len(fefu['columns'])])
-        for i, c in enumerate(fefu['columns']):
-            print(i)
+        for j, c in enumerate(fefu['columns']):
+            print(c)
             features[c] = temp[:,i]
         print(temp.shape)
+        # features_k.to_feather("blind_features" + str(i) + ".ftr")
     features = pd.concat([features, features_k], sort=False)
     features.to_feather("blind_features" + str(i) + ".ftr")
 
+len(features.columns)
 features.to_feather("blind_features.ftr")
+#pd.read_feather("blind_features.ftr").to_feather("blind_features_1.ftr")
 
 #test = feature_functions.values[0][0]
 #for i in range(3):

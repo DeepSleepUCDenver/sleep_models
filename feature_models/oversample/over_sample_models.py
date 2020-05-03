@@ -60,7 +60,9 @@ results = pd.DataFrame({
     'Validation Accuracy': validation_accuracy
 })
 old_results = pd.read_csv('./over_sample_results.csv')
-pd.merge(old_results, results, on=['Model', 'Label Propagation'], how='outer', validate="one_to_one")
+results = results.append(old_results)
+#pd.merge(old_results, results, on=['Model', 'Label Propagation'], how='outer', )
+results.to_csv('./over_sample_results.csv')
 
 
 x_tr, y_tr, x_te, y_te, x_va, y_va = load_all_data()

@@ -26,6 +26,7 @@ for i in ['Test Accuracy', 'Train Accuracy', 'Validation Accuracy']:
 
 data = pd.concat(shape_tmp)
 data['SSL'] = data['Label Propagation']
+data['SSL'].unique()
 data.columns
 data.loc[1].T
 
@@ -124,6 +125,25 @@ plot = sea.barplot(
 plot.set_title("Model Performance, Pseudo Labels, Oversampled")
 plt.xlim(0, .9)
 plt.savefig("model_performance_Pseudo_Labels_Oversampled.png")
+
+sea.set_palette(sea.color_palette()[-3:])
+plt.clf()
+plt.figure(figsize=(8,3))
+plt.subplots_adjust(left=0.21)
+sea.set(style="whitegrid")
+sea.set_palette("Blues")
+sea.set_palette(sea.color_palette()[-3:])
+plot = sea.barplot(
+    x='Score', 
+    y='Model', 
+    hue="Partition", 
+    data=data[[(i['SSL'] == "Pseudo Iterative" and i['Balancing'] == "Oversampled") for _, i in data.iterrows()]],
+    ci=None,
+    orient='h'
+    )
+plot.set_title("Model Performance, Iterative Pseudo Labels, Oversampled")
+plt.xlim(0, .9)
+plt.savefig("model_performance_Iterative_Labels_Oversampled.png")
 
 sea.set_palette(sea.color_palette()[-3:])
 plt.clf()
