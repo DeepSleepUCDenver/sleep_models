@@ -23,6 +23,7 @@ from sklearn import svm
 from over_sample_data import load_all_data 
 from over_sample_data import load_known_data 
 from over_sample_data import load_psdo_label_data
+from over_sample_data import load_iter_psdo_label_data
 
 model_name = []
 test_accuracy = []
@@ -30,11 +31,42 @@ train_accuracy = []
 validation_accuracy = []
 label_prop = []
 
+
+model_name.append("Random Forest")
+label_prop.append("Pseudo Iterative")
+rdf = RandomForestClassifier(max_depth=4, random_state=0)
+x_tr, y_tr, x_te, y_te, x_va, y_va = load_iter_psdo_label_data(rdf, 50)
+rdf.fit(x_tr, y_tr)
+train_accuracy.append(     rdf.score(x_tr, y_tr))
+test_accuracy.append(      rdf.score(x_te, y_te))
+validation_accuracy.append(rdf.score(x_va, y_va))
+
+model_name.append("Naive Bayes")
+label_prop.append("Pseudo Iterative")
+bay = GaussianNB()
+x_tr, y_tr, x_te, y_te, x_va, y_va = load_psdo_label_data(bay)
+bay.fit(x_tr, y_tr)
+train_accuracy.append(     bay.score(x_tr, y_tr))
+test_accuracy.append(      bay.score(x_te, y_te))
+validation_accuracy.append(bay.score(x_va, y_va))
+
+
+
+results = pd.DataFrame({
+    'Model': model_name,
+    'Label Propagation': label_prop,
+    'Test Accuracy': test_accuracy,
+    'Train Accuracy': train_accuracy,
+    'Validation Accuracy': validation_accuracy
+})
+old_results = pd.read_csv('./over_sample_results.csv')
+pd.merge(old_results, results, on=['Model', 'Label Propagation'], how='outer', validate="one_to_one")
+
+
 x_tr, y_tr, x_te, y_te, x_va, y_va = load_all_data()
 x_tr.shape
 x_te.shape
 x_va.shape
-
 
 
 model_name.append("SVM Linear Kernel")
@@ -124,7 +156,9 @@ results = pd.DataFrame({
     'Train Accuracy': train_accuracy,
     'Validation Accuracy': validation_accuracy
 })
+
 results.to_csv('./over_sample_results.csv')
+
 x_tr, y_tr, x_te, y_te, x_va, y_va = load_known_data()
 
 model_name.append("SVM Linear Kernel")
@@ -314,3 +348,4 @@ results = pd.DataFrame({
     'Validation Accuracy': validation_accuracy
 })
 results.to_csv('./over_sample_results.csv')
+
