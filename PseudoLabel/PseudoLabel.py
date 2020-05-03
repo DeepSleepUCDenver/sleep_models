@@ -107,3 +107,112 @@ class PseudoLabeler(BaseEstimator, RegressorMixin):
     def get_model_name(self):
         return self.model.__class__.__name__
 #model, labaled_x, labaled_y, unlabaled_x, sample_rate=0.2, seed=42
+
+class Iterative_PseudoLabeler(BaseEstimator, RegressorMixin):
+    '''
+    model: sci-kit learn model
+    test: unlabaled data
+    Number of sections to split the unlabaled data
+    features: x
+    target: y (label)
+    seed: random seeeed
+    '''
+    def __init__(self, model, labaled_x, labaled_y, unlabaled_x, num_split, seed=42):
+        self.num_split = num_split
+        self.seed = seed
+        self.model = model
+        self.model.seed = seed
+
+        self.labaled_x = labaled_x
+        self.labaled_y = labaled_y
+        self.unlabaled_x = unlabaled_x
+        np.random.seed(self.seed)
+        #self.test = test
+        #self.features = features
+        #self.target = target
+
+    def get_params(self, deep=True):
+        return {
+            "num_split":  self.num_split,
+            "seed": self.seed,
+            "model": self.model,
+            "labaled_x": self.labaled_x ,
+            "labaled_y": self.labaled_y,
+            "unlabaled_x": self.unlabaled_x
+        }
+
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        return self
+
+    #CALL FIT WITH Labaled Data
+    def fit(self):
+
+            #First fit with labaled Training Data
+            self.model.fit(self.labaled_x, self.labaled_y)
+
+            self.labaled_y = self.labaled_y.reshape((self.labaled_y.shape[0], 1))
+            training_data = np.hstack((self.labaled_x, self.labaled_y))
+
+            #Shuffle the unlabaled data for good measure
+            np.random.shuffle(self.unlabaled_x)
+
+            for new_unlabaled_section in np.array_split(self.unlabaled_x,self.num_split):
+
+                #Label the unlabeled data section
+                new_unlabaled_section_predictions = self.model.predict(new_unlabaled_section).reshape((new_unlabaled_section.shape[0],1))
+                new_unlabaled_section_complete = np.hstack((new_unlabaled_section,new_unlabaled_section_predictions))
+
+                #Add newly labaled data to training data
+                training_data = np.vstack((training_data,new_unlabaled_section_complete))
+
+                #Shuffle the training_data
+                np.random.shuffle(training_data)
+
+                #Refit the model with the new training data
+                y_training_data = training_data[:, -1]
+                x_training_data = np.delete(training_data, -1, 1)
+
+                self.model.fit(x_training_data, y_training_data)
+
+            return self
+
+
+    def predict(self, X):
+        return self.model.predict(X)
+
+    def get_model_name(self):
+        return self.model.__class__.__name__
+#model, labaled_x, labaled_y, unlabaled_x, sample_rate=0.2, seed=42
+
+
+#EXAMPLE ITERATIVE
+'''
+
+
+
+model = Iterative_PseudoLabeler(
+    RandomForestClassifier(n_estimators=1),
+    x_tr,
+    y_tr,
+    x_te,
+    num_split=3
+)
+
+model.fit()
+print(model.predict(x_te)[0:20])
+
+#KNN Classifier
+model1 = PseudoLabeler(
+    KNeighborsClassifier(2),
+    x_tr,
+    y_tr,
+    x_te
+)
+model1.fit(x_tr, y_tr)
+print(model1.predict(x_te)[0:20])
+
+print(y_te[0:20])
+'''
+
