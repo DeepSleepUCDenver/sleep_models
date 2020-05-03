@@ -9,6 +9,7 @@ d3 = pd.read_csv('./balancing/balance_sample_results.csv')
 d1["Balancing"] = "Oversampled"
 d2["Balancing"] = "Undersampled"
 d3["Balancing"] = "Algorithm"
+#d1['Label Propagation'].unique()
 
 data = pd.concat([d1, d2, d3])
 data.reset_index(inplace = True, drop=True)
@@ -104,6 +105,25 @@ plot = sea.barplot(
 plot.set_title("Model Performance, Label Propagation, Oversampled")
 plt.xlim(0, .9)
 plt.savefig("model_performance_Label_Propagation_Oversampled.png")
+
+sea.set_palette(sea.color_palette()[-3:])
+plt.clf()
+plt.figure(figsize=(8,12))
+plt.subplots_adjust(left=0.21)
+sea.set(style="whitegrid")
+sea.set_palette("Blues")
+sea.set_palette(sea.color_palette()[-3:])
+plot = sea.barplot(
+    x='Score', 
+    y='Model', 
+    hue="Partition", 
+    data=data[[(i['SSL'] == "Pseudo Labels" and i['Balancing'] == "Oversampled") for _, i in data.iterrows()]],
+    ci=None,
+    orient='h'
+    )
+plot.set_title("Model Performance, Pseudo Labels, Oversampled")
+plt.xlim(0, .9)
+plt.savefig("model_performance_Pseudo_Labels_Oversampled.png")
 
 sea.set_palette(sea.color_palette()[-3:])
 plt.clf()
