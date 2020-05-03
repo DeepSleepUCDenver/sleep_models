@@ -6,7 +6,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.semi_supervised import LabelPropagation
 # from sklearn.semi_supervised import label_propagation
 from imblearn.over_sampling import SMOTE
-
+from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor, GradientBoostingRegressor, RandomForestClassifier
+from PseudoLabel.PseudoLabel import PseudoLabeler
+from sklearn.neighbors import KNeighborsClassifier
 
 
 def load_all_data():
@@ -79,4 +82,39 @@ def load_known_data():
     x, y = shuffle(x, y, random_state=42)
     x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size = 0.20)
     return x_tr, y_tr, x_te, y_te, x_va, y_va
+
+
+
+
+x_tr, y_tr, x_te, y_te, x_va, y_va = load_all_data()
+
+
+#x_tr, y_tr, x_te
+
+#Random Forest Example.
+#x_tr and y_tr are the labeled data
+#x_te is unlabaled data
+
+#Random Forest Example
+#---------------------
+model = PseudoLabeler(
+    RandomForestClassifier(n_estimators=2),
+    x_tr,
+    y_tr,
+    x_te
+)
+model.fit(x_tr, y_tr)
+print(model.predict(x_te))
+#---------------------
+
+#KNN Classifier
+model1 = PseudoLabeler(
+    KNeighborsClassifier(),
+    x_tr,
+    y_tr,
+    x_te
+)
+model1.fit(x_tr, y_tr)
+print(model1.predict(x_te))
+
 
