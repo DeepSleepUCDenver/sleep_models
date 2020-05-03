@@ -81,13 +81,14 @@ train_accuracy.append(     adb.score(x_tr, y_tr))
 test_accuracy.append(      adb.score(x_te, y_te))
 validation_accuracy.append(adb.score(x_va, y_va))
 
-model_name.append("Ada-Boost SVM")
-label_prop.append("Label Propagation")
-adbs = AdaBoostClassifier(base_estimator=svm.SVC(probability=True, kernel='rbf'), random_state=0)
-adbs.fit(x_tr, y_tr)
-test_accuracy.append(      adb.score(x_te, y_te))
-validation_accuracy.append(adb.score(x_va, y_va))
-validation_accuracy.append(adbs.score(x_va, y_va))
+# this one takes to long
+# model_name.append("Ada-Boost SVM")
+# label_prop.append("Label Propagation")
+# adbs = AdaBoostClassifier(base_estimator=svm.SVC(probability=True, kernel='rbf'), random_state=0)
+# adbs.fit(x_tr, y_tr)
+# test_accuracy.append(      adb.score(x_te, y_te))
+# validation_accuracy.append(adb.score(x_va, y_va))
+# validation_accuracy.append(adbs.score(x_va, y_va))
 
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -166,14 +167,15 @@ train_accuracy.append(     adb.score(x_tr, y_tr))
 test_accuracy.append(      adb.score(x_te, y_te))
 validation_accuracy.append(adb.score(x_va, y_va))
 
-model_name.append("Ada-Boost SVM")
-label_prop.append("Label Propagation")
-adbs = AdaBoostClassifier(base_estimator=svm.SVC(probability=True, kernel='rbf'), random_state=0)
-adbs.fit(x_tr, y_tr)
-train_accuracy.append(     adbs.score(x_tr, y_tr))
-test_accuracy.append(      adbs.score(x_te, y_te))
-validation_accuracy.append(adbs.score(x_va, y_va))
-from sklearn.neighbors import KNeighborsClassifier
+# this one takes to long
+# model_name.append("Ada-Boost SVM")
+# label_prop.append("Label Propagation")
+# adbs = AdaBoostClassifier(base_estimator=svm.SVC(probability=True, kernel='rbf'), random_state=0)
+# adbs.fit(x_tr, y_tr)
+# train_accuracy.append(     adbs.score(x_tr, y_tr))
+# test_accuracy.append(      adbs.score(x_te, y_te))
+# validation_accuracy.append(adbs.score(x_va, y_va))
+# from sklearn.neighbors import KNeighborsClassifier
 
 model_name.append("KNN")
 label_prop.append("No Propagation")
