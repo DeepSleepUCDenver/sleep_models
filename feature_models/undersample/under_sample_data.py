@@ -4,9 +4,10 @@ from sklearn.preprocessing import scale, normalize
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
 from sklearn.semi_supervised import LabelPropagation
-from sklearn.semi_supervised import itr
 # from sklearn.semi_supervised import label_propagation
 from imblearn.over_sampling import SMOTE
+from PseudoLabel.PseudoLabel import PseudoLabeler
+from PseudoLabel.PseudoLabel import Iterative_PseudoLabeler
 
 
 
@@ -15,16 +16,13 @@ def load_all_data():
     data = pd.read_feather('../feature_stage_data_all.ftr')
     x = data[data.columns[3:]]
     y = data['stage']
-    o = data.observation
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
-    
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     nnl = lambda a: np.invert(np.isnan(a))
     nul = lambda a: np.isnan(a)
@@ -43,7 +41,7 @@ def load_all_data():
 
     # apply Label Spreading
     label_spread = LabelPropagation(kernel='knn')
-    label_spread.fit(x_obs_us, y_obs_v)
+    label_spread.fit(x_obs_us, y_obs_us)
     x_all = np.concatenate([x_obs, x_nuls], axis=0)
     y_all = np.concatenate([y_obs, label_spread.predict(x_nuls)], axis=0)
     
@@ -56,11 +54,6 @@ def load_all_data():
         x_btr = np.concatenate([x_btr, x[y == i][:smpnum]])
         y_btr = np.concatenate([y_btr, y[y == i][:smpnum]])
     x_tr, x_te, y_tr, y_te = train_test_split(x_btr, y_btr, test_size = 0.20)
-    # Over sample the stages
-    #zen = SMOTE(random_state=8675309)
-    #x, y = zen.fit_resample(x_all, y_all)
-    #x, y = shuffle(x, y, random_state=42)
-    #x_tr, x_te, y_tr, y_te = train_test_split(x, y, test_size = 0.20)
     return x_tr, y_tr, x_te, y_te, x_va, y_va
 
 
@@ -73,12 +66,10 @@ def load_known_data():
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
-    
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     nnl = lambda a: np.invert(np.isnan(a))
     nul = lambda a: np.isnan(a)
@@ -118,11 +109,10 @@ def load_psdo_label_data(algo):
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     
     nnl = lambda a: np.invert(np.isnan(a))
@@ -143,11 +133,11 @@ def load_psdo_label_data(algo):
     # apply Pseudo Label Spreading
     model = PseudoLabeler(
         algo,
-        x_obs_os,
-        y_obs_os,
+        x_obs_us,
+        y_obs_us,
         x_nuls
     )
-    model.fit(x_obs_os, y_obs_os)
+    model.fit(x_obs_us, y_obs_us)
     x_all = np.concatenate([x_obs, x_nuls], axis=0)
     y_nuls = model.predict(x_nuls)
     y_all = np.concatenate([y_obs, y_nuls], axis=0)
@@ -165,7 +155,7 @@ def load_psdo_label_data(algo):
     return x_tr, y_tr, x_te, y_te, x_va, y_va
 
 
-def load_iter_psdo_label_data(algo):
+def load_iter_psdo_label_data(algo, n_splits):
     # Read am partition the matrix
     data = pd.read_feather('../feature_stage_data_all.ftr')
     x = data[data.columns[3:]]
@@ -174,11 +164,10 @@ def load_iter_psdo_label_data(algo):
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     
     nnl = lambda a: np.invert(np.isnan(a))
@@ -197,13 +186,14 @@ def load_iter_psdo_label_data(algo):
         y_obs_us = np.concatenate([y_obs_us, y[y == i][:smpnum]])
 
     # apply Pseudo Label Spreading
-    model = PseudoLabeler(
+    model = Iterative_PseudoLabeler(
         algo,
-        x_obs_os,
-        y_obs_os,
-        x_nuls
+        x_obs_us,
+        y_obs_us,
+        x_nuls,
+        n_splits
     )
-    model.fit(x_obs_os, y_obs_os)
+    model.fit()
     x_all = np.concatenate([x_obs, x_nuls], axis=0)
     y_nuls = model.predict(x_nuls)
     y_all = np.concatenate([y_obs, y_nuls], axis=0)

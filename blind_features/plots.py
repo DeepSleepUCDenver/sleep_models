@@ -52,21 +52,3 @@ plt.xlim(0, .9)
 plt.savefig("blind_model_performance__Oversampled.png")
 
 
-#sea.set_palette(sea.color_palette()[-3:])
-#plt.clf()
-#plt.figure(figsize=(8,3))
-#plt.subplots_adjust(left=0.26)
-#sea.set(style="whitegrid")
-#sea.set_palette("Reds")
-#sea.set_palette(sea.color_palette()[-3:])
-#plot = sea.barplot(
-#    x='Score', 
-#    y='Model', 
-#    hue="Partition", 
-#    data=data[[(i['SSL'] == "No Propagation" and i['Balancing'] == "Algorithm") for _, i in data.iterrows()]],
-#    ci=None,
-#    orient='h'
-#    )
-#plot.set_title("Model Performance, No Propagation, Balancing Algorithm")
-#plt.xlim(0, .9)
-#plt.savefig("model_performance_No_Propagation_Balancing_Algorithm.png")

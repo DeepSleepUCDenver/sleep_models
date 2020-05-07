@@ -21,12 +21,10 @@ def load_all_data():
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
-    
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     nnl = lambda a: np.invert(np.isnan(a))
     nul = lambda a: np.isnan(a)
@@ -61,11 +59,10 @@ def load_known_data():
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     
     nnl = lambda a: np.invert(np.isnan(a))
@@ -96,11 +93,10 @@ def load_psdo_label_data(algo):
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     
     nnl = lambda a: np.invert(np.isnan(a))
@@ -142,11 +138,10 @@ def load_iter_psdo_label_data(algo, n_splits):
     x = x.values
     x = normalize(x)
     y = y.values
-    x_va = x[[i in [8, 9] for i in o.values]]
-    y_va = y[[i in [8, 9] for i in o.values]]
-    x = x[[i not in [8, 9] for i in o.values]]
-    y = y[[i not in [8, 9] for i in o.values]]
-    o.unique()
+    x_va = x[4977:4977+3000]
+    y_va = y[4977:4977+3000]
+    x = np.concatenate((x[:4977],x[4977+3000:]))
+    y = np.concatenate((y[:4977],y[4977+3000:]))
     
     
     nnl = lambda a: np.invert(np.isnan(a))
